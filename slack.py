@@ -15,7 +15,7 @@ import funcy as fy
 def call_api(path, token, params):
 
     resp = requests.get(
-        urljoin('https://slack.com/api', path),
+        urljoin('https://slack.com/api/', path),
         headers={'Authorization': f'Bearer {token}'},
         params=params,
     )
@@ -64,7 +64,7 @@ def develop():
 
 def call_reaction_gets(token, channel, timestamp):
     return call_api(
-        '/api/reactions.get',
+        'reactions.get',
         token=token,
         params=dict(
             channel=channel,

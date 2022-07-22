@@ -15,7 +15,7 @@ import requests
 import funcy as fy
 
 
-@click.group()
+@click.group(help='Help you to gather information from Slack.')
 def cli():
     pass
 

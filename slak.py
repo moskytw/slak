@@ -233,12 +233,12 @@ $ echo U123AB45C | slack query-emails --token TOKEN
 )
 @add_token_option
 @click.option(
-    '--details',
+    '--names-titles',
     is_flag=True,
     help='Write the emails with real names and titles.',
 )
 @add_json_option
-def query_emails(token, details, json=None):
+def query_emails(token, names_titles, json=None):
     users = sys.stdin.read().split()
 
     for user in users:
@@ -249,7 +249,7 @@ def query_emails(token, details, json=None):
             continue
 
         d = fy.get_in(resp_json_dict, ['user', 'profile'])
-        if details:
+        if names_titles:
             click.echo(f"{d['email']}\t{d['real_name']}\t{d['title']}")
         else:
             click.echo(d['email'])

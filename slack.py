@@ -116,9 +116,7 @@ def list_react_names(link, token, channel=None, timestamp=None, count=False):
 
     for d in get_reaction_dicts(call_reaction_gets(token, channel, timestamp)):
         if count:
-            click.echo(d['count'], nl=False)
-            click.echo('\t', nl=False)
-            click.echo(d['name'])
+            click.echo(f"{d['count']}\t{d['name']}")
         else:
             click.echo(d['name'])
 

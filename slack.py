@@ -82,8 +82,33 @@ def call_reaction_gets(token, channel, timestamp):
     )
 
 
+# 2-tuple === pair
+def break_into_channel_timestamp_pair(link):
+    the_rest, _, dirty_timestamp = link.rpartition('/')
+    timestamp = f'{dirty_timestamp[1:-6]}.{dirty_timestamp[-6:]}'
+    _, _, channel = the_rest.rpartition('/')
+    return (channel, timestamp)
+
+
+def call_reaction_gets_by_link(token, link):
+    return call_reaction_gets(token, *break_into_channel_timestamp_pair(link))
+
+
 def get_reaction_dicts(resp_json_dict):
     return fy.get_in(resp_json_dict, ['message', 'reactions'])
+
+
+def _list_react(token, link, channel, timestamp):
+    if link:
+        return call_reaction_gets_by_link(token, link)
+    elif channel and timestamp:
+        return call_reaction_gets(token, channel, timestamp)
+    else:
+        click.echo(
+            'Need at least a link, or both the channel and timestamp.',
+            err=True,
+        )
+        sys.exit(1)
 
 
 def add_token_option(f):
@@ -99,7 +124,7 @@ def add_token_option(f):
 # We use `react` and `reaction` interchangeably.
 def add_common_parameters_for_react(f):
     return fy.compose(
-        click.argument('link', default=''),
+        click.argument('link', required=False),
         click.option(
             '--channel',
             help='You can find it in the bottom of the channel details modal.',
@@ -108,23 +133,12 @@ def add_common_parameters_for_react(f):
     )(f)
 
 
-# 2-tuple === pair
-def break_into_channel_timestamp_pair(link):
-    the_rest, _, dirty_timestamp = link.rpartition('/')
-    timestamp = f'{dirty_timestamp[1:-6]}.{dirty_timestamp[-6:]}'
-    _, _, channel = the_rest.rpartition('/')
-    return (channel, timestamp)
-
-
 @cli.command(help='List the names of reactions for a message.')
 @add_token_option
 @add_common_parameters_for_react
 @click.option('--count', is_flag=True, help='Also count for each reaction.')
-def list_react_names(link, token, channel=None, timestamp=None, count=False):
-    if link and not channel and not timestamp:
-        channel, timestamp = break_into_channel_timestamp_pair(link)
-
-    for d in get_reaction_dicts(call_reaction_gets(token, channel, timestamp)):
+def list_react_names(token, link, channel=None, timestamp=None, count=False):
+    for d in get_reaction_dicts(_list_react(token, link, channel, timestamp)):
         if count:
             click.echo(f"{d['count']}\t{d['name']}")
         else:
@@ -138,12 +152,9 @@ def list_react_names(link, token, channel=None, timestamp=None, count=False):
     '--react-name', help='Specify a reaction rather than the first reaction.'
 )
 def list_react_users(
-    link, token, channel=None, timestamp=None, react_name=None
+    token, link=None, channel=None, timestamp=None, react_name=None
 ):
-    if link and not channel and not timestamp:
-        channel, timestamp = break_into_channel_timestamp_pair(link)
-
-    for d in get_reaction_dicts(call_reaction_gets(token, channel, timestamp)):
+    for d in get_reaction_dicts(_list_react(token, link, channel, timestamp)):
 
         current_react_name = d['name']
         users = d['users']

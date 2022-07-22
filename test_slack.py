@@ -61,6 +61,21 @@ class TestReactCommands:
         assert result.exit_code == 0
         assert result.output == 'react-1\nreact-2\n'
 
+    def test_list_react_names_by_link(self):
+        runner = CliRunner()
+
+        result = runner.invoke(
+            slack.cli,
+            [
+                'list-react-names',
+                'https://COMPANY.slack.com/archives/CCCCCCCCC/p9999999999999999',  # noqa
+                '--token',
+                'TOKEN',
+            ],
+        )
+        assert result.exit_code == 0
+        assert result.output == 'react-1\nreact-2\n'
+
     def test_list_react_names_with_count(self):
         runner = CliRunner()
 

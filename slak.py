@@ -5,11 +5,16 @@
 
 import os
 import sys
+import json as _json
 from urllib.parse import urljoin
 
 import click
 import requests
 import funcy as fy
+
+
+def _json_dumps(x, indent=2):
+    return _json.dumps(x, ensure_ascii=False, indent=indent)
 
 
 @click.group(help='Help you gather information from Slack.')
@@ -139,6 +144,14 @@ def add_common_parameters_for_react(f):
     )(f)
 
 
+def add_json_option(f):
+    return click.option(
+        '--json',
+        is_flag=True,
+        help='Instead of the processed result, print the response body in JSON.',  # noqa
+    )(f)
+
+
 @cli.command(
     help='''List the names of reactions for a message.
 
@@ -150,8 +163,16 @@ $ slak list-react-names --token TOKEN --channel C123ABCD4 --timestamp 1658312123
 @add_token_option
 @add_common_parameters_for_react
 @click.option('--count', is_flag=True, help='Also count for each reaction.')
-def list_react_names(token, link, channel=None, timestamp=None, count=False):
-    for d in get_reaction_dicts(_list_react(token, link, channel, timestamp)):
+@add_json_option
+def list_react_names(
+    token, link, channel=None, timestamp=None, count=False, json=None
+):
+    resp_json_dict = _list_react(token, link, channel, timestamp)
+    if json:
+        click.echo(_json_dumps(resp_json_dict))
+        return
+
+    for d in get_reaction_dicts(resp_json_dict):
         if count:
             click.echo(f"{d['count']}\t{d['name']}")
         else:
@@ -172,10 +193,16 @@ $ slak list-react-users --token TOKEN --channel C123ABCD4 --timestamp 1658312123
     '--react-name',
     help='Specify a reaction, default to the first reaction of the message.',
 )
+@add_json_option
 def list_react_users(
-    token, link=None, channel=None, timestamp=None, react_name=None
+    token, link=None, channel=None, timestamp=None, react_name=None, json=None
 ):
-    for d in get_reaction_dicts(_list_react(token, link, channel, timestamp)):
+    resp_json_dict = _list_react(token, link, channel, timestamp)
+    if json:
+        click.echo(_json_dumps(resp_json_dict))
+        return
+
+    for d in get_reaction_dicts(resp_json_dict):
 
         current_react_name = d['name']
         users = d['users']
@@ -210,10 +237,17 @@ $ echo U123AB45C | slack query-emails --token TOKEN
     is_flag=True,
     help='Write the emails with real names and titles.',
 )
-def query_emails(token, details):
+@add_json_option
+def query_emails(token, details, json=None):
     users = sys.stdin.read().split()
+
     for user in users:
         resp_json_dict = call_users_info(token, user)
+        if json:
+            # So, we get the output in JSON Lines.
+            click.echo(_json_dumps(resp_json_dict, indent=None))
+            continue
+
         d = fy.get_in(resp_json_dict, ['user', 'profile'])
         if details:
             click.echo(f"{d['email']}\t{d['real_name']}\t{d['title']}")

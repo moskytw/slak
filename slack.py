@@ -61,12 +61,11 @@ def call_api(path, token, params):
         params=params,
     )
 
-    # Yeah, the assumptions may be too strict, but, in the face of ambiguity,
-    # refuse the temptation to guess.
+    # Yeah, the assumption to the response body may be too strict, but, in the
+    # face of ambiguity, refuse the temptation to guess.
     resp_json_dict = resp.json()
     if resp_json_dict['ok'] is False:
-        error = resp_json_dict['error']
-        raise RuntimeError(f'Slack replied {error!r}')
+        raise RuntimeError(f"Slack replied {resp_json_dict['error']!r}")
 
     return resp_json_dict
 

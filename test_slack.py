@@ -2,9 +2,7 @@
 
 
 from unittest.mock import patch
-
 from click.testing import CliRunner
-
 import slack
 
 
@@ -35,7 +33,7 @@ class TestReactCommands:
     def test_hi_in_class(self):
         assert 'hi' != 'hello'
 
-    def test_mock(self):
+    def test_patching_in_setup(self):
         # After mocking, you can call without the actual arguments:
         assert (
             slack.call_reaction_gets()['message']['reactions'][1]['name']

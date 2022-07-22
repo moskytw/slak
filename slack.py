@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+# TODO: Rename this file.
+# TODO: Make it as a package.
+# TODO: Add examples in help.
+
 
 import os
 import sys
@@ -15,15 +19,18 @@ import funcy as fy
 # `get_` for HTTP GET.
 def call_api(path, token, params):
 
+    # TODO: Try requests-cache.
     resp = requests.get(
         urljoin('https://slack.com/api/', path),
         headers={'Authorization': f'Bearer {token}'},
         params=params,
     )
 
+    # Yeah, the assumptions may be too strict, but, in the face of ambiguity,
+    # refuse the temptation to guess.
     resp_json_dict = resp.json()
-    if resp_json_dict.get('ok') in (None, False):
-        error = resp_json_dict.get('error', '')
+    if resp_json_dict['ok'] is False:
+        error = resp_json_dict['error']
         raise RuntimeError(f'Slack replied {error!r}')
 
     return resp_json_dict
@@ -80,16 +87,17 @@ def get_reaction_dicts(resp_json_dict):
 
 
 def add_token_option(f):
-    f = click.option(
+    return click.option(
         '--token',
         envvar='SLACK_LAB_TOKEN',
         prompt=True,
         help="Something may start with 'xoxp-'.",
+        show_envvar=True,
     )(f)
-    return f
 
 
-def add_common_options_for_react(f):
+# We use `react` and `reaction` interchangeably.
+def add_common_parameters_for_react(f):
     return fy.compose(
         click.argument('link', default=''),
         click.option(
@@ -100,7 +108,8 @@ def add_common_options_for_react(f):
     )(f)
 
 
-def break_link(link):
+# 2-tuple === pair
+def break_into_channel_timestamp_pair(link):
     the_rest, _, dirty_timestamp = link.rpartition('/')
     timestamp = f'{dirty_timestamp[1:-6]}.{dirty_timestamp[-6:]}'
     _, _, channel = the_rest.rpartition('/')
@@ -109,11 +118,11 @@ def break_link(link):
 
 @cli.command(help='List the names of reactions for a message.')
 @add_token_option
-@add_common_options_for_react
+@add_common_parameters_for_react
 @click.option('--count', is_flag=True, help='Also count for each reaction.')
 def list_react_names(link, token, channel=None, timestamp=None, count=False):
     if link and not channel and not timestamp:
-        channel, timestamp = break_link(link)
+        channel, timestamp = break_into_channel_timestamp_pair(link)
 
     for d in get_reaction_dicts(call_reaction_gets(token, channel, timestamp)):
         if count:
@@ -124,7 +133,7 @@ def list_react_names(link, token, channel=None, timestamp=None, count=False):
 
 @cli.command(help='List the user IDs of a reaction in a message.')
 @add_token_option
-@add_common_options_for_react
+@add_common_parameters_for_react
 @click.option(
     '--react-name', help='Specify a reaction rather than the first reaction.'
 )
@@ -132,7 +141,7 @@ def list_react_users(
     link, token, channel=None, timestamp=None, react_name=None
 ):
     if link and not channel and not timestamp:
-        channel, timestamp = break_link(link)
+        channel, timestamp = break_into_channel_timestamp_pair(link)
 
     for d in get_reaction_dicts(call_reaction_gets(token, channel, timestamp)):
 

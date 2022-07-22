@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-# TODO: Rename this file.
 # TODO: Make it as a package.
 # TODO: Add examples in help.
 # TODO: Comments as Slides.
@@ -120,8 +119,7 @@ def _list_react(token, link, channel, timestamp):
 def add_token_option(f):
     return click.option(
         '--token',
-        # TODO: Rename it.
-        envvar='SLACK_LAB_TOKEN',
+        envvar='SLAK_TOKEN',
         prompt=True,
         help="Something may start with 'xoxp-'.",
         show_envvar=True,

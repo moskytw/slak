@@ -110,7 +110,7 @@ def break_link(link):
 @cli.command(help='List the names of reactions for a message.')
 @add_token_option
 @add_common_options_for_react
-@click.option('--count', is_flag=True)
+@click.option('--count', is_flag=True, help='Also count for each reaction.')
 def list_react_names(link, token, channel=None, timestamp=None, count=False):
     if link and not channel and not timestamp:
         channel, timestamp = break_link(link)
@@ -125,7 +125,9 @@ def list_react_names(link, token, channel=None, timestamp=None, count=False):
 @cli.command(help='List the user IDs of a reaction in a message.')
 @add_token_option
 @add_common_options_for_react
-@click.option('--react-name')
+@click.option(
+    '--react-name', help='Specify a reaction rather than the first reaction.'
+)
 def list_react_users(
     link, token, channel=None, timestamp=None, react_name=None
 ):

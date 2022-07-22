@@ -109,12 +109,18 @@ def break_link(link):
 @cli.command(help='List the names of reactions for a message.')
 @add_token_option
 @add_common_options_for_react
-def list_react_names(link, token, channel=None, timestamp=None):
+@click.option('--count', is_flag=True)
+def list_react_names(link, token, channel=None, timestamp=None, count=False):
     if link and not channel and not timestamp:
         channel, timestamp = break_link(link)
 
     for d in get_reaction_dicts(call_reaction_gets(token, channel, timestamp)):
-        click.echo(d['name'])
+        if count:
+            click.echo(d['count'], nl=False)
+            click.echo('\t', nl=False)
+            click.echo(d['name'])
+        else:
+            click.echo(d['name'])
 
 
 @cli.command(help='List the user IDs of a reaction in a message.')

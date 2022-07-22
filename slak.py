@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-# TODO: Make it as a package.
 # TODO: Add examples in help.
 # TODO: Comments as Slides.
 

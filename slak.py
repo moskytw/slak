@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-# TODO: Add examples in help.
 # TODO: Comments as Slides.
 
 
@@ -140,7 +139,14 @@ def add_common_parameters_for_react(f):
     )(f)
 
 
-@cli.command(help='List the names of reactions for a message.')
+@cli.command(
+    help='''List the names of reactions for a message.
+
+\b
+$ slak list-react-names --token TOKEN https://company.slack.com/archives/C123ABCD4/p1658312123456789
+$ slak list-react-names --token TOKEN --channel C123ABCD4 --timestamp 1658312123.456789
+'''  # noqa
+)
 @add_token_option
 @add_common_parameters_for_react
 @click.option('--count', is_flag=True, help='Also count for each reaction.')
@@ -152,7 +158,14 @@ def list_react_names(token, link, channel=None, timestamp=None, count=False):
             click.echo(d['name'])
 
 
-@cli.command(help='List the user IDs of a reaction in a message.')
+@cli.command(
+    help='''List the user IDs of a reaction in a message.
+
+\b
+$ slak list-react-users --token TOKEN https://company.slack.com/archives/C123ABCD4/p1658312123456789
+$ slak list-react-users --token TOKEN --channel C123ABCD4 --timestamp 1658312123.456789
+'''  # noqa
+)
 @add_token_option
 @add_common_parameters_for_react
 @click.option(
@@ -184,7 +197,13 @@ def call_users_info(token, user):
     )
 
 
-@cli.command(help='Read user IDs from stdin and write the emails out.')
+@cli.command(
+    help='''Read user IDs from stdin and write the emails out.
+
+\b
+$ echo U123AB45C | slack query-emails --token TOKEN
+'''
+)
 @add_token_option
 @click.option(
     '--details',

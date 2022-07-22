@@ -74,3 +74,20 @@ class TestReactCommands:
         )
         assert result.exit_code == 0
         assert result.output == 'UUUUUUUUUAA\nUUUUUUUUUBB\nUUUUUUUUUCC\n'
+
+    def test_list_react_user_without_react_name(self):
+        runner = CliRunner()
+
+        result = runner.invoke(
+            slack.cli,
+            [
+                # fmt: off
+                'list-react-users',
+                '--token', 'TOKEN',
+                '--channel', 'CHANNEL',
+                '--timestamp', 'TIMESTAMP',
+                # fmt: on
+            ],
+        )
+        assert result.exit_code == 0
+        assert result.output.count('\n') == 29

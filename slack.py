@@ -134,10 +134,14 @@ def list_react_users(
         channel, timestamp = break_link(link)
 
     for d in get_reaction_dicts(call_reaction_gets(token, channel, timestamp)):
+
         current_react_name = d['name']
         users = d['users']
         count = d['count']
-        if not react_name or react_name == current_react_name:
+        if react_name is None:
+            react_name = current_react_name
+
+        if react_name == current_react_name:
             assert len(users) == count
             for u in users:
                 click.echo(u)

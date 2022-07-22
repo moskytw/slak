@@ -160,3 +160,23 @@ class TestReactCommands:
         )
         assert result.exit_code == 0
         assert result.output == 'ACCOUNT@COMPANY.COM\nACCOUNT@COMPANY.COM\n'
+
+    def test_query_emails_with_names_titles(self):
+        runner = CliRunner()
+
+        result = runner.invoke(
+            slak.cli,
+            [
+                # fmt: off
+                'query-emails',
+                '--token', 'TOKEN',
+                '--names-titles',
+                # fmt: on
+            ],
+            input='UUUUUUUUUU1\nUUUUUUUUUU2',
+        )
+        assert result.exit_code == 0
+        assert (
+            result.output
+            == 'ACCOUNT@COMPANY.COM\tREAL_NAME\tTITLE\nACCOUNT@COMPANY.COM\tREAL_NAME\tTITLE\n'  # noqa
+        )

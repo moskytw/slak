@@ -55,7 +55,6 @@ def develop():
 # `get_` for HTTP GET.
 def call_api(path, token, params):
 
-    # TODO: Try requests-cache.
     resp = requests.get(
         urljoin('https://slack.com/api/', path),
         headers={'Authorization': f'Bearer {token}'},

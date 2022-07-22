@@ -33,7 +33,7 @@ def cli():
     pass
 
 
-@cli.command(hidden=True)
+@cli.command(hidden=True, help='Some random code snippets for developing.')
 def develop():
     click.secho('DEVELOP', bg='red', fg='white')
     click.echo()
@@ -78,21 +78,40 @@ def get_reaction_dicts(resp_json_dict):
     return fy.get_in(resp_json_dict, ['message', 'reactions'])
 
 
-@cli.command()
-@click.option('--token', envvar='SLACK_LAB_TOKEN', prompt=True)
-@click.option('--channel', prompt=True)
-@click.option('--timestamp', prompt=True)
+def add_token_option(f):
+    f = click.option(
+        '--token',
+        envvar='SLACK_LAB_TOKEN',
+        prompt=True,
+        help="Something may start with 'xoxp-'.",
+    )(f)
+    return f
+
+
+def add_common_options_for_react(f):
+    return fy.compose(
+        click.option(
+            '--channel',
+            prompt=True,
+            help='You can find it in the bottom of the channel details modal.',
+        ),
+        click.option('--timestamp', prompt=True, help='A Unix time in float.'),
+    )(f)
+
+
+@cli.command(help='List the names of reactions for a message.')
+@add_token_option
+@add_common_options_for_react
 def list_react_names(token, channel, timestamp):
     for d in get_reaction_dicts(call_reaction_gets(token, channel, timestamp)):
         click.echo(d['name'])
 
 
-@cli.command()
-@click.option('--token', envvar='SLACK_LAB_TOKEN', prompt=True)
-@click.option('--channel', prompt=True)
-@click.option('--timestamp', prompt=True)
-@click.option('--react-name', default='')
-def list_react_users(token, channel, timestamp, react_name):
+@cli.command(help='List the user IDs of a reaction in a message.')
+@add_token_option
+@add_common_options_for_react
+@click.option('--react-name')
+def list_react_users(token, channel, timestamp, react_name=None):
     for d in get_reaction_dicts(call_reaction_gets(token, channel, timestamp)):
         current_react_name = d['name']
         users = d['users']

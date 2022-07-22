@@ -9,32 +9,10 @@
 import os
 import sys
 from urllib.parse import urljoin
-from pprint import pformat
 
 import click
 import requests
 import funcy as fy
-
-
-# The `set_`/`get_` usually hints a quick operation, so here we avoid to use
-# `get_` for HTTP GET.
-def call_api(path, token, params):
-
-    # TODO: Try requests-cache.
-    resp = requests.get(
-        urljoin('https://slack.com/api/', path),
-        headers={'Authorization': f'Bearer {token}'},
-        params=params,
-    )
-
-    # Yeah, the assumptions may be too strict, but, in the face of ambiguity,
-    # refuse the temptation to guess.
-    resp_json_dict = resp.json()
-    if resp_json_dict['ok'] is False:
-        error = resp_json_dict['error']
-        raise RuntimeError(f'Slack replied {error!r}')
-
-    return resp_json_dict
 
 
 @click.group()
@@ -44,6 +22,8 @@ def cli():
 
 @cli.command(hidden=True, help='Some random code snippets for developing.')
 def develop():
+    from pprint import pformat
+
     click.secho('DEVELOP', bg='red', fg='white')
     click.echo()
 
@@ -69,6 +49,27 @@ def develop():
         if not react_name or react_name == current_react_name:
             for u in users:
                 click.echo(u)
+
+
+# The `set_`/`get_` usually hints a quick operation, so here we avoid to use
+# `get_` for HTTP GET.
+def call_api(path, token, params):
+
+    # TODO: Try requests-cache.
+    resp = requests.get(
+        urljoin('https://slack.com/api/', path),
+        headers={'Authorization': f'Bearer {token}'},
+        params=params,
+    )
+
+    # Yeah, the assumptions may be too strict, but, in the face of ambiguity,
+    # refuse the temptation to guess.
+    resp_json_dict = resp.json()
+    if resp_json_dict['ok'] is False:
+        error = resp_json_dict['error']
+        raise RuntimeError(f'Slack replied {error!r}')
+
+    return resp_json_dict
 
 
 def call_reaction_gets(token, channel, timestamp):

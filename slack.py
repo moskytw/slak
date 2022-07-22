@@ -90,19 +90,29 @@ def add_token_option(f):
 
 def add_common_options_for_react(f):
     return fy.compose(
+        click.argument('link', default=''),
         click.option(
             '--channel',
-            prompt=True,
             help='You can find it in the bottom of the channel details modal.',
         ),
-        click.option('--timestamp', prompt=True, help='A Unix time in float.'),
+        click.option('--timestamp', help='A Unix time in float.'),
     )(f)
+
+
+def break_link(link):
+    the_rest, _, dirty_timestamp = link.rpartition('/')
+    timestamp = f'{dirty_timestamp[1:-6]}.{dirty_timestamp[-6:]}'
+    _, _, channel = the_rest.rpartition('/')
+    return (channel, timestamp)
 
 
 @cli.command(help='List the names of reactions for a message.')
 @add_token_option
 @add_common_options_for_react
-def list_react_names(token, channel, timestamp):
+def list_react_names(link, token, channel=None, timestamp=None):
+    if link and not channel and not timestamp:
+        channel, timestamp = break_link(link)
+
     for d in get_reaction_dicts(call_reaction_gets(token, channel, timestamp)):
         click.echo(d['name'])
 
@@ -111,7 +121,12 @@ def list_react_names(token, channel, timestamp):
 @add_token_option
 @add_common_options_for_react
 @click.option('--react-name')
-def list_react_users(token, channel, timestamp, react_name=None):
+def list_react_users(
+    link, token, channel=None, timestamp=None, react_name=None
+):
+    if link and not channel and not timestamp:
+        channel, timestamp = break_link(link)
+
     for d in get_reaction_dicts(call_reaction_gets(token, channel, timestamp)):
         current_react_name = d['name']
         users = d['users']

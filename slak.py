@@ -13,7 +13,7 @@ import requests
 import funcy as fy
 
 
-@click.group(help='Help you to gather information from Slack.')
+@click.group(help='Help you gather information from Slack.')
 def cli():
     pass
 
@@ -133,7 +133,10 @@ def add_common_parameters_for_react(f):
             '--channel',
             help='You can find it in the bottom of the channel details modal.',
         ),
-        click.option('--timestamp', help='A Unix time in float.'),
+        click.option(
+            '--timestamp',
+            help='A Unix time in float, working like an ID of a message.',
+        ),
     )(f)
 
 
@@ -153,7 +156,8 @@ def list_react_names(token, link, channel=None, timestamp=None, count=False):
 @add_token_option
 @add_common_parameters_for_react
 @click.option(
-    '--react-name', help='Specify a reaction rather than the first reaction.'
+    '--react-name',
+    help='Specify a reaction, default to the first reaction of the message.',
 )
 def list_react_users(
     token, link=None, channel=None, timestamp=None, react_name=None
@@ -183,7 +187,9 @@ def call_users_info(token, user):
 @cli.command(help='Read user IDs from stdin and write the emails out.')
 @add_token_option
 @click.option(
-    '--details', is_flag=True, help='Write emails with real names and titles.'
+    '--details',
+    is_flag=True,
+    help='Write the emails with real names and titles.',
 )
 def query_emails(token, details):
     users = sys.stdin.read().split()

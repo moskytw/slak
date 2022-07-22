@@ -2,6 +2,7 @@
 
 
 import os
+import sys
 from urllib.parse import urljoin
 from pprint import pformat
 
@@ -145,9 +146,28 @@ def list_react_users(
                 click.echo(u)
 
 
-@click.command()
-def query_emails(users):
-    pass
+def call_users_info(token, user):
+    return call_api(
+        'users.info',
+        token=token,
+        params=dict(user=user),
+    )
+
+
+@cli.command(help='Read user IDs from stdin and write the emails out.')
+@add_token_option
+@click.option(
+    '--details', is_flag=True, help='Write emails with real names and titles.'
+)
+def query_emails(token, details):
+    users = sys.stdin.read().split()
+    for user in users:
+        resp_json_dict = call_users_info(token, user)
+        d = fy.get_in(resp_json_dict, ['user', 'profile'])
+        if details:
+            click.echo(f"{d['email']}\t{d['real_name']}\t{d['title']}")
+        else:
+            click.echo(d['email'])
 
 
 if __name__ == '__main__':

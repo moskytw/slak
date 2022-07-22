@@ -84,9 +84,15 @@ def call_reaction_gets(token, channel, timestamp):
     )
 
 
+# A link may look like:
+#
+# 1. https://COMPANY.slack.com/archives/CCCCCCCCC/p9999999999999999
+# 2. https://COMPANY.slack.com/archives/CCCCCCCCC/p8888888888888888?thread_ts=99999999999999999&cid=CCCCCCCCC  # noqa
+#
 # 2-tuple === pair
 def break_into_channel_timestamp_pair(link):
-    the_rest, _, dirty_timestamp = link.rpartition('/')
+    the_rest, _, _ = link.partition('?')
+    the_rest, _, dirty_timestamp = the_rest.rpartition('/')
     timestamp = f'{dirty_timestamp[1:-6]}.{dirty_timestamp[-6:]}'
     _, _, channel = the_rest.rpartition('/')
     return (channel, timestamp)

@@ -3,6 +3,7 @@
 # TODO: Rename this file.
 # TODO: Make it as a package.
 # TODO: Add examples in help.
+# TODO: Comments as Slides.
 
 
 import os
@@ -114,6 +115,7 @@ def _list_react(token, link, channel, timestamp):
 def add_token_option(f):
     return click.option(
         '--token',
+        # TODO: Rename it.
         envvar='SLACK_LAB_TOKEN',
         prompt=True,
         help="Something may start with 'xoxp-'.",

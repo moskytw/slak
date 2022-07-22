@@ -57,6 +57,25 @@ class TestReactCommands:
         assert result.exit_code == 0
         assert result.output == 'react-1\nreact-2\n'
 
+    def test_list_react_names_with_count(self):
+        runner = CliRunner()
+
+        result = runner.invoke(
+            slack.cli,
+            [
+                # fmt: off
+                'list-react-names',
+                '--token', 'TOKEN',
+                '--channel', 'CHANNEL',
+                '--timestamp', 'TIMESTAMP',
+                '--count'
+                # fmt: on
+            ],
+        )
+        assert result.exit_code == 0
+        cells = result.output.split()
+        assert cells == ['29', 'react-1', '3', 'react-2']
+
     def test_list_react_user(self):
         runner = CliRunner()
 

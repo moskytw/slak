@@ -21,3 +21,6 @@ classifiers = [
 [project.urls]
 "Homepage" = "https://github.com/moskytw/slak"
 # "Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
+
+[project.scripts]
+slak = "slak:cli"

@@ -11,6 +11,7 @@ import click
 import requests
 
 
+# TODO: Bump it.
 __version__ = '0.0.2'
 
 
@@ -260,6 +261,50 @@ def list_react_users(
                 click.echo(u)
 
 
+# TODO: The helps.
+@cli.command()
+@add_token_option
+@add_common_parameters_for_react
+@click.option('--count', 'to_count', is_flag=True)
+@click.option('--users', 'to_list_users', is_flag=True)
+@click.option('--clicked', 'target_react_name')
+@add_json_option
+def query_reacts(
+    token,
+    link=None,
+    channel=None,
+    timestamp=None,
+    to_count=None,
+    to_list_users=None,
+    target_react_name=None,
+    json=None,
+):
+
+    resp_json_dict = _list_react(token, link, channel, timestamp)
+    if json:
+        click.echo(_json_dumps(resp_json_dict))
+        return
+
+    for d in resp_json_dict['message']['reactions']:
+
+        current_react_name = d['name']
+        users = d['users']
+        count = d['count']
+
+        if to_count:
+            click.echo(f"{d['count']}\t{d['name']}")
+        elif to_list_users:
+            if (
+                target_react_name is None
+                or target_react_name == current_react_name
+            ):
+                assert len(users) == count
+                for u in users:
+                    click.echo(u)
+        else:
+            click.echo(d['name'])
+
+
 def call_users_info(token, user):
     return call_api(
         'users.info',
@@ -272,6 +317,7 @@ def add_jsonl_option(f):
     return add_json_option(f, jsonl=True)
 
 
+# TODO: Why not query_users?
 @cli.command(
     help='''Read user IDs from args or stdin and write the emails out.
 

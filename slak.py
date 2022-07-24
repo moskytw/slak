@@ -240,21 +240,23 @@ def add_jsonl_option(f):
 
 
 @cli.command(
-    help='''Read user IDs from stdin and write the emails out.
+    help='''Read user IDs from args or stdin and write the emails out.
 
 \b
 $ echo U123AB45C | slack query-emails --token TOKEN
 '''
 )
 @add_token_option
+@click.argument('users', nargs=-1)
 @click.option(
     '--names-titles',
     is_flag=True,
     help='Write the emails with real names and titles.',
 )
 @add_jsonl_option
-def query_emails(token, names_titles=None, jsonl=None):
-    users = sys.stdin.read().split()
+def query_emails(token, users, names_titles=None, jsonl=None):
+    if not users:
+        users = sys.stdin.read().split()
 
     for user in users:
         resp_json_dict = call_users_info(token, user)

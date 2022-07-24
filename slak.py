@@ -253,7 +253,7 @@ $ echo U123AB45C | slack query-emails --token TOKEN
     help='Write the emails with real names and titles.',
 )
 @add_jsonl_option
-def query_emails(token, names_titles, jsonl=None):
+def query_emails(token, names_titles=None, jsonl=None):
     users = sys.stdin.read().split()
 
     for user in users:

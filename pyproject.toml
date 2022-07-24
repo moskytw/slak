@@ -7,6 +7,7 @@ name = "slak"
 authors = [{name = "Mosky Liu", email = "mosky.tw@gmail.com"}]
 readme = "README.md"
 license = {file = "LICENSE"}
+# TODO: Should be in more classifiers?
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
 dependencies = [

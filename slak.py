@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+'''Collect data from Slack handily.'''
+
 import os
 import sys
 import json as _json
@@ -9,11 +11,15 @@ import click
 import requests
 
 
+__version__ = '0.0.2'
+
+
 def _json_dumps(x, indent=2):
     return _json.dumps(x, ensure_ascii=False, indent=indent)
 
 
-@click.group(help='Help you gather information from Slack.')
+@click.group(help=__doc__)
+@click.version_option(version=__version__)
 def cli():
     pass
 

@@ -71,10 +71,11 @@ class TestReactCommands:
         result = runner.invoke(
             slak.cli,
             [
+                # fmt: off
                 'list-react-names',
                 'https://COMPANY.slack.com/archives/CCCCCCCCC/p9999999999999999',  # noqa
-                '--token',
-                'TOKEN',
+                '--token', 'TOKEN',
+                # fmt: on
             ],
         )
         assert result.exit_code == 0
@@ -86,10 +87,11 @@ class TestReactCommands:
         result = runner.invoke(
             slak.cli,
             [
+                # fmt: off
                 'list-react-names',
                 'https://COMPANY.slack.com/archives/CCCCCCCCC/p8888888888888888?thread_ts=99999999999999999&cid=CCCCCCCCC',  # noqa
-                '--token',
-                'TOKEN',
+                '--token', 'TOKEN',
+                # fmt: on
             ],
         )
         assert result.exit_code == 0

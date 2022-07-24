@@ -7,7 +7,6 @@ from urllib.parse import urljoin
 
 import click
 import requests
-import funcy as fy
 
 
 def _json_dumps(x, indent=2):
@@ -130,17 +129,21 @@ def add_token_option(f):
 
 # We use `react` and `reaction` interchangeably.
 def add_common_parameters_for_react(f):
-    return fy.compose(
-        click.argument('link', required=False),
-        click.option(
-            '--channel',
-            help='You can find it in the bottom of the channel details modal.',
-        ),
-        click.option(
-            '--timestamp',
-            help='A Unix time in float, working like an ID of a message.',
-        ),
-    )(f)
+    for deco in reversed(
+        [
+            click.argument('link', required=False),
+            click.option(
+                '--channel',
+                help='You can find it in the bottom of the channel details modal.',  # noqa
+            ),
+            click.option(
+                '--timestamp',
+                help='A Unix time in float, working like an ID of a message.',
+            ),
+        ]
+    ):
+        f = deco(f)
+    return f
 
 
 def add_json_option(f):

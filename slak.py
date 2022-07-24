@@ -146,11 +146,18 @@ def add_common_parameters_for_react(f):
     return f
 
 
-def add_json_option(f):
+def add_json_option(f, jsonl=False):
+
+    decl = '--json'
+    format_name = 'JSON'
+    if jsonl:
+        decl = '--jsonl'
+        format_name = 'JSON Lines'
+
     return click.option(
-        '--json',
+        decl,
         is_flag=True,
-        help='Instead of the processed result, print the response body in JSON.',  # noqa
+        help=f'Instead of the processed result, print the response body in {format_name}.',  # noqa
     )(f)
 
 
@@ -228,6 +235,10 @@ def call_users_info(token, user):
     )
 
 
+def add_jsonl_option(f):
+    return add_json_option(f, jsonl=True)
+
+
 @cli.command(
     help='''Read user IDs from stdin and write the emails out.
 
@@ -241,13 +252,13 @@ $ echo U123AB45C | slack query-emails --token TOKEN
     is_flag=True,
     help='Write the emails with real names and titles.',
 )
-@add_json_option
-def query_emails(token, names_titles, json=None):
+@add_jsonl_option
+def query_emails(token, names_titles, jsonl=None):
     users = sys.stdin.read().split()
 
     for user in users:
         resp_json_dict = call_users_info(token, user)
-        if json:
+        if jsonl:
             # So, we get the output in JSON Lines.
             click.echo(_json_dumps(resp_json_dict, indent=None))
             continue

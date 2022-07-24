@@ -6,6 +6,9 @@ from click.testing import CliRunner
 import slak
 
 
+# You could always try to *make it work* first:
+#
+# (I use this file as a presentation, so here are some wordy comments.)
 def test_hi():
     assert 'hi' != 'hello'
 
@@ -33,6 +36,7 @@ class TestReactCommands:
     def test_hi_in_class(self):
         assert 'hi' != 'hello'
 
+    # Test the test (setup):
     def test_patching_in_setup(self):
         # After mocking, you can call without the actual arguments:
         assert (

@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-# TODO: Comments as Slides.
-
-
 import os
 import sys
 import json as _json
@@ -53,8 +50,10 @@ def develop():
                 click.echo(u)
 
 
-# The `set_`/`get_` usually hints a quick operation, so here we avoid to use
+# The `set_`/`get_` usually cues a quick operation, so here we avoid to use
 # `get_` for HTTP GET.
+#
+# (I use this file as a presentation, so here are some wordy comments.)
 def call_api(path, token, params):
 
     resp = requests.get(
@@ -152,6 +151,8 @@ def add_json_option(f):
     )(f)
 
 
+# You may notice that I am maintaining the distances between the definitions
+# and references of functions.
 @cli.command(
     help='''List the names of reactions for a message.
 

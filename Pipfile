@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 click = "~=8.1"
 requests = "~=2.28"
+slak = {editable = true, path = "."}
 
 [dev-packages]
 pytest = "~=7.1"

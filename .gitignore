@@ -2,7 +2,5 @@
 /dist/
 
 #
-__pycache__/
 .DS_Store
-.mypy_cache
-.pytest_cache
+__pycache__/

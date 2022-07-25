@@ -317,7 +317,6 @@ def add_jsonl_option(f):
     return add_json_option(f, jsonl=True)
 
 
-# TODO: Why not query_users?
 @cli.command(
     help='''Read user IDs from args or stdin and write the emails out.
 
@@ -349,6 +348,38 @@ def query_emails(token, users, names_titles=None, jsonl=None):
             click.echo(f"{d['email']}\t{d['real_name']}\t{d['title']}")
         else:
             click.echo(d['email'])
+
+
+# TODO: The helps.
+@cli.command()
+@add_token_option
+@click.argument('users', nargs=-1)
+@click.option('--emails', 'with_email', is_flag=True)
+@click.option('--names', 'with_name', is_flag=True)
+@click.option('--titles', 'with_title', is_flag=True)
+@add_jsonl_option
+def query_users(
+    token, users, with_email=None, with_name=None, with_title=None, jsonl=None
+):
+    if not users:
+        users = sys.stdin.read().split()
+
+    for user in users:
+        resp_json_dict = call_users_info(token, user)
+        if jsonl:
+            # So, we get the output in JSON Lines.
+            click.echo(_json_dumps(resp_json_dict, indent=None))
+            continue
+
+        d = resp_json_dict['user']['profile']
+        cells = []
+        if with_email:
+            cells.append(d['email'])
+        if with_name:
+            cells.append(d['real_name'])
+        if with_title:
+            cells.append(d['title'])
+        click.echo('\t'.join(cells))
 
 
 if __name__ == '__main__':

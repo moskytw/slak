@@ -265,18 +265,19 @@ def list_react_users(
 @cli.command()
 @add_token_option
 @add_common_parameters_for_react
-@click.option('--count', 'to_count', is_flag=True)
+@click.option('--count', 'to_count_reacts', is_flag=True)
 @click.option('--users', 'to_list_users', is_flag=True)
-@click.option('--clicked', 'target_react_name')
+@click.option('--clicked', 'target_name')
 @add_json_option
 def query_reacts(
     token,
     link=None,
+    # TODO: Clean up the channel and timestamp.
     channel=None,
     timestamp=None,
-    to_count=None,
+    to_count_reacts=None,
     to_list_users=None,
-    target_react_name=None,
+    target_name=None,
     json=None,
 ):
 
@@ -287,22 +288,21 @@ def query_reacts(
 
     for d in resp_json_dict['message']['reactions']:
 
-        current_react_name = d['name']
+        name = d['name']
         users = d['users']
         count = d['count']
 
-        if to_count:
-            click.echo(f"{d['count']}\t{d['name']}")
+        if not to_count_reacts and not to_list_users:
+            click.echo(d['name'])
+        elif to_count_reacts:
+            click.echo(f"{count}\t{name}")
         elif to_list_users:
-            if (
-                target_react_name is None
-                or target_react_name == current_react_name
-            ):
-                assert len(users) == count
+            if target_name is None:
+                for u in users:
+                    click.echo(f"{name}\t{u}")
+            elif name == target_name:
                 for u in users:
                     click.echo(u)
-        else:
-            click.echo(d['name'])
 
 
 def call_users_info(token, user):

@@ -23,7 +23,6 @@ def _json_dumps(x, indent=2):
 #
 # (I use this file as a presentation, so here are some wordy comments.)
 def call_api(path, token, params):
-
     resp = requests.get(
         urljoin('https://slack.com/api/', path),
         headers={'Authorization': f'Bearer {token}'},
@@ -130,9 +129,9 @@ def add_token_option(f):
 
 
 def add_json_option(f, jsonl=False):
-
     decl = '--json'
     format_name = 'JSON'
+
     if jsonl:
         decl = '--jsonl'
         format_name = 'JSON Lines'
@@ -198,14 +197,12 @@ def query_reacts(
     target_name=None,
     json=None,
 ):
-
     resp_json_dict = call_reaction_gets_by_link(token, link)
     if json:
         click.echo(_json_dumps(resp_json_dict))
         return
 
     for d in resp_json_dict['message']['reactions']:
-
         name = d['name']
         users = d['users']
         count = d['count']

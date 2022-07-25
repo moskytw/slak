@@ -93,7 +93,7 @@ randcat@idontlikespam.neither
 ```bash
 $ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123456 --users --clicked likeapro | slak query-users --names --titles
 mosky@idontlikespam.anyway	Mosky Liu	Slak Author
-randcat@idontlikespam.neither	Rand Cat	A Flyer?
+randcat@idontlikespam.neither	Rand Cat	A Flyer
 ...
 ```
 

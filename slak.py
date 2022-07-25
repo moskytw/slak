@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-'''Collect data from Slack handily.'''
+'''Collect data from Slack like a pro. ⚡️'''
 
 import os
 import sys
@@ -118,7 +118,7 @@ def develop():
                 click.echo(u)
 
 
-@cli.command(help="Don't you have a token?")
+@cli.command(help="Start with me if you have no idea about token.")
 def how_to_get_a_token():
     s = click.style
     bw = lambda text: s(text, fg='bright_white')  # noqa
@@ -140,7 +140,7 @@ Or ask your colleague for a token.'''  # noqa
         f'''
 {s('$ read SLAK_TOKEN && export SLAK_TOKEN', bold=True)}
 
-In this way, you're free from using {bw('--token')} every time and your token is secure from being recorded into the command history file.
+In this way, you're free from using {bw('--token')} every time and your token is secure from being recorded into the history file.
 '''  # noqa
     )
 
@@ -148,6 +148,7 @@ In this way, you're free from using {bw('--token')} every time and your token is
 def add_token_option(f):
     return click.option(
         '--token',
+        metavar='TOKEN',
         envvar='SLAK_TOKEN',
         prompt=True,
         help="Something may start with 'xoxp-'.",
@@ -166,7 +167,7 @@ def add_json_option(f, jsonl=False):
     return click.option(
         decl,
         is_flag=True,
-        help=f'Instead of the processed result, print the response body in {format_name}.',  # noqa
+        help=f'Print the response body in {format_name} directly.',  # noqa
     )(f)
 
 
@@ -176,25 +177,36 @@ def add_jsonl_option(f):
 
 # We use `react` and `reaction` interchangeably.
 @cli.command(
-    help='''List the user IDs of a reaction in a message.
+    help='''Query like the users who clicked a reaction.
 
 \b
 $ slak list-react-users --token TOKEN https://company.slack.com/archives/C123ABCD4/p1658312123456789
-$ slak list-react-users --token TOKEN --channel C123ABCD4 --timestamp 1658312123.456789
 '''  # noqa
 )
 @add_token_option
 @click.argument('link')
-@click.option('--count', 'to_count_reacts', is_flag=True)
-@click.option('--users', 'to_list_users', is_flag=True)
-@click.option('--clicked', 'target_name')
+@click.option(
+    '--count',
+    'to_count_reacts',
+    is_flag=True,
+    help='Show counts of reactions.',
+)
+@click.option(
+    '--users', 'to_list_users', is_flag=True, help='List the user IDs.'
+)
+@click.option(
+    '--clicked',
+    'specified_name',
+    metavar='REACT_NAME',
+    help='Filter by a reaction name.',
+)
 @add_json_option
 def query_reacts(
     token,
     link=None,
     to_count_reacts=None,
     to_list_users=None,
-    target_name=None,
+    specified_name=None,
     json=None,
 ):
     resp_json_dict = call_reaction_gets_by_link(token, link)
@@ -212,16 +224,16 @@ def query_reacts(
         elif to_count_reacts:
             click.echo(f"{count}\t{name}")
         elif to_list_users:
-            if target_name is None:
+            if specified_name is None:
                 for u in users:
                     click.echo(f"{name}\t{u}")
-            elif name == target_name:
+            elif name == specified_name:
                 for u in users:
                     click.echo(u)
 
 
 @cli.command(
-    help='''Read user IDs from args or stdin and write the emails out.
+    help='''Query user information like emails, names, titles from stdin or args.
 
 \b
 $ echo U123AB45C | slack query-emails --token TOKEN
@@ -229,9 +241,23 @@ $ echo U123AB45C | slack query-emails --token TOKEN
 )
 @add_token_option
 @click.argument('users', nargs=-1)
-@click.option('--emails', 'with_email', is_flag=True)
-@click.option('--names', 'with_name', is_flag=True)
-@click.option('--titles', 'with_title', is_flag=True)
+@click.option(
+    '--emails/--no-emails',
+    'with_email',
+    is_flag=True,
+    default=True,
+    show_default=True,
+    help='Print the email column.',
+)
+@click.option(
+    '--names/--no-names', 'with_name', is_flag=True, help='The name column.'
+)
+@click.option(
+    '--titles/--no-titles',
+    'with_title',
+    is_flag=True,
+    help='The title column.',
+)
 @add_jsonl_option
 def query_users(
     token, users, with_email=None, with_name=None, with_title=None, jsonl=None

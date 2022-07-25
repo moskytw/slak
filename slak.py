@@ -196,6 +196,7 @@ $ slak list-react-users --token TOKEN https://company.slack.com/archives/C123ABC
 )
 @click.option(
     '--clicked',
+    '-c',
     'specified_name',
     metavar='REACT_NAME',
     help='Filter by a reaction name.',

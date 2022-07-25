@@ -11,8 +11,7 @@ import click
 import requests
 
 
-# TODO: Bump it.
-__version__ = '0.0.2'
+__version__ = '1.0.0'
 
 
 def _json_dumps(x, indent=2):
@@ -111,17 +110,12 @@ def call_reaction_gets_by_link(token, link):
     return call_reaction_gets(token, *break_into_channel_timestamp_pair(link))
 
 
-def _list_react(token, link, channel, timestamp):
-    if link:
-        return call_reaction_gets_by_link(token, link)
-    elif channel and timestamp:
-        return call_reaction_gets(token, channel, timestamp)
-    else:
-        click.echo(
-            'Need at least a link, or both the channel and timestamp.',
-            err=True,
-        )
-        sys.exit(1)
+def call_users_info(token, user):
+    return call_api(
+        'users.info',
+        token=token,
+        params=dict(user=user),
+    )
 
 
 def add_token_option(f):
@@ -132,25 +126,6 @@ def add_token_option(f):
         help="Something may start with 'xoxp-'.",
         show_envvar=True,
     )(f)
-
-
-# We use `react` and `reaction` interchangeably.
-def add_common_parameters_for_react(f):
-    for deco in reversed(
-        [
-            click.argument('link', required=False),
-            click.option(
-                '--channel',
-                help='You can find it in the bottom of the channel details modal.',  # noqa
-            ),
-            click.option(
-                '--timestamp',
-                help='A Unix time in float, working like an ID of a message.',
-            ),
-        ]
-    ):
-        f = deco(f)
-    return f
 
 
 def add_json_option(f, jsonl=False):
@@ -166,6 +141,10 @@ def add_json_option(f, jsonl=False):
         is_flag=True,
         help=f'Instead of the processed result, print the response body in {format_name}.',  # noqa
     )(f)
+
+
+def add_jsonl_option(f):
+    return add_json_option(f, jsonl=True)
 
 
 @cli.command(help="Don't you have a token?")
@@ -195,35 +174,7 @@ In this way, you're free from using {bw('--token')} every time and your token is
     )
 
 
-# You may notice that I am maintaining the distances between the definitions
-# and references of functions.
-@cli.command(
-    help='''List the names of reactions for a message.
-
-\b
-$ slak list-react-names --token TOKEN https://company.slack.com/archives/C123ABCD4/p1658312123456789
-$ slak list-react-names --token TOKEN --channel C123ABCD4 --timestamp 1658312123.456789
-'''  # noqa
-)
-@add_token_option
-@add_common_parameters_for_react
-@click.option('--count', is_flag=True, help='Also count for each reaction.')
-@add_json_option
-def list_react_names(
-    token, link, channel=None, timestamp=None, count=False, json=None
-):
-    resp_json_dict = _list_react(token, link, channel, timestamp)
-    if json:
-        click.echo(_json_dumps(resp_json_dict))
-        return
-
-    for d in resp_json_dict['message']['reactions']:
-        if count:
-            click.echo(f"{d['count']}\t{d['name']}")
-        else:
-            click.echo(d['name'])
-
-
+# We use `react` and `reaction` interchangeably.
 @cli.command(
     help='''List the user IDs of a reaction in a message.
 
@@ -233,38 +184,7 @@ $ slak list-react-users --token TOKEN --channel C123ABCD4 --timestamp 1658312123
 '''  # noqa
 )
 @add_token_option
-@add_common_parameters_for_react
-@click.option(
-    '--react-name',
-    help='Specify a reaction, default to the first reaction of the message.',
-)
-@add_json_option
-def list_react_users(
-    token, link=None, channel=None, timestamp=None, react_name=None, json=None
-):
-    resp_json_dict = _list_react(token, link, channel, timestamp)
-    if json:
-        click.echo(_json_dumps(resp_json_dict))
-        return
-
-    for d in resp_json_dict['message']['reactions']:
-
-        current_react_name = d['name']
-        users = d['users']
-        count = d['count']
-        if react_name is None:
-            react_name = current_react_name
-
-        if react_name == current_react_name:
-            assert len(users) == count
-            for u in users:
-                click.echo(u)
-
-
-# TODO: The helps.
-@cli.command()
-@add_token_option
-@add_common_parameters_for_react
+@click.argument('link')
 @click.option('--count', 'to_count_reacts', is_flag=True)
 @click.option('--users', 'to_list_users', is_flag=True)
 @click.option('--clicked', 'target_name')
@@ -272,16 +192,13 @@ def list_react_users(
 def query_reacts(
     token,
     link=None,
-    # TODO: Clean up the channel and timestamp.
-    channel=None,
-    timestamp=None,
     to_count_reacts=None,
     to_list_users=None,
     target_name=None,
     json=None,
 ):
 
-    resp_json_dict = _list_react(token, link, channel, timestamp)
+    resp_json_dict = call_reaction_gets_by_link(token, link)
     if json:
         click.echo(_json_dumps(resp_json_dict))
         return
@@ -305,18 +222,6 @@ def query_reacts(
                     click.echo(u)
 
 
-def call_users_info(token, user):
-    return call_api(
-        'users.info',
-        token=token,
-        params=dict(user=user),
-    )
-
-
-def add_jsonl_option(f):
-    return add_json_option(f, jsonl=True)
-
-
 @cli.command(
     help='''Read user IDs from args or stdin and write the emails out.
 
@@ -324,34 +229,6 @@ def add_jsonl_option(f):
 $ echo U123AB45C | slack query-emails --token TOKEN
 '''
 )
-@add_token_option
-@click.argument('users', nargs=-1)
-@click.option(
-    '--names-titles',
-    is_flag=True,
-    help='Write the emails with real names and titles.',
-)
-@add_jsonl_option
-def query_emails(token, users, names_titles=None, jsonl=None):
-    if not users:
-        users = sys.stdin.read().split()
-
-    for user in users:
-        resp_json_dict = call_users_info(token, user)
-        if jsonl:
-            # So, we get the output in JSON Lines.
-            click.echo(_json_dumps(resp_json_dict, indent=None))
-            continue
-
-        d = resp_json_dict['user']['profile']
-        if names_titles:
-            click.echo(f"{d['email']}\t{d['real_name']}\t{d['title']}")
-        else:
-            click.echo(d['email'])
-
-
-# TODO: The helps.
-@cli.command()
 @add_token_option
 @click.argument('users', nargs=-1)
 @click.option('--emails', 'with_email', is_flag=True)

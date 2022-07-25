@@ -100,19 +100,20 @@ def develop():
     click.echo(resp_json_dict['message']['reactions'])
     click.echo()
 
-    react_name = None  # -> 29 users
-    react_name = 'myreact'  # -> 29 users
-    react_name = 'myreact123'  # -> 0 users
+    specified_react_name = None  # -> 29 users
+    specified_react_name = 'myreact'  # -> 29 users
+    specified_react_name = 'myreact123'  # -> 0 users
 
     for d in resp_json_dict['message']['reactions']:
-
         current_react_name = d['name']
         users = d['users']
         count = d['count']
-        if react_name is None:
-            react_name = current_react_name
 
-        if react_name == current_react_name:
+        # It means specifying the first react:
+        if specified_react_name is None:
+            specified_react_name = current_react_name
+
+        if current_react_name == specified_react_name:
             assert len(users) == count
             for u in users:
                 click.echo(u)

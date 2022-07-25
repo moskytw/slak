@@ -48,67 +48,47 @@ class TestReactCommands:
             != 'react-3'
         )
 
-    def test_list_react_names(self):
+    def test_query_react(self):
         runner = CliRunner()
-
         result = runner.invoke(
             slak.cli,
             [
                 # fmt: off
-                'list-react-names',
-                '--token', 'TOKEN',
-                '--channel', 'CHANNEL',
-                '--timestamp', 'TIMESTAMP',
+                'query-reacts',
+                '--token', 'token',
+                'https://COMPANY.slack.com/archives/CCCCCCCCC/p9999999999999999',
                 # fmt: on
             ],
         )
         assert result.exit_code == 0
         assert result.output == 'react-1\nreact-2\n'
 
-    def test_list_react_names_by_link(self):
+    def test_query_react_with_thread_link(self):
         runner = CliRunner()
-
         result = runner.invoke(
             slak.cli,
             [
                 # fmt: off
-                'list-react-names',
-                'https://COMPANY.slack.com/archives/CCCCCCCCC/p9999999999999999',  # noqa
+                'query-reacts',
                 '--token', 'TOKEN',
+                'https://COMPANY.slack.com/archives/CCCCCCCCC/p8888888888888888?thread_ts=99999999999999999&cid=CCCCCCCCC',
                 # fmt: on
             ],
         )
         assert result.exit_code == 0
         assert result.output == 'react-1\nreact-2\n'
-
-    def test_list_react_names_by_link_with_query(self):
         runner = CliRunner()
 
+    def test_query_react_with_count(self):
+        runner = CliRunner()
         result = runner.invoke(
             slak.cli,
             [
                 # fmt: off
-                'list-react-names',
-                'https://COMPANY.slack.com/archives/CCCCCCCCC/p8888888888888888?thread_ts=99999999999999999&cid=CCCCCCCCC',  # noqa
+                'query-reacts',
                 '--token', 'TOKEN',
-                # fmt: on
-            ],
-        )
-        assert result.exit_code == 0
-        assert result.output == 'react-1\nreact-2\n'
-
-    def test_list_react_names_with_count(self):
-        runner = CliRunner()
-
-        result = runner.invoke(
-            slak.cli,
-            [
-                # fmt: off
-                'list-react-names',
-                '--token', 'TOKEN',
-                '--channel', 'CHANNEL',
-                '--timestamp', 'TIMESTAMP',
-                '--count'
+                'https://COMPANY.slack.com/archives/CCCCCCCCC/p9999999999999999',
+                '--count',
                 # fmt: on
             ],
         )
@@ -116,49 +96,46 @@ class TestReactCommands:
         cells = result.output.split()
         assert cells == ['29', 'react-1', '3', 'react-2']
 
-    def test_list_react_user(self):
+    def test_query_react_with_users(self):
         runner = CliRunner()
-
         result = runner.invoke(
             slak.cli,
             [
                 # fmt: off
-                'list-react-users',
+                'query-reacts',
                 '--token', 'TOKEN',
-                '--channel', 'CHANNEL',
-                '--timestamp', 'TIMESTAMP',
-                '--react-name', 'react-2',
+                'https://COMPANY.slack.com/archives/CCCCCCCCC/p9999999999999999',
+                '--users',
+                # fmt: on
+            ],
+        )
+        assert result.exit_code == 0
+        assert result.output.count('\n') == 29 + 3
+
+    def test_query_react_with_users_clicked(self):
+        runner = CliRunner()
+        result = runner.invoke(
+            slak.cli,
+            [
+                # fmt: off
+                'query-reacts',
+                '--token', 'TOKEN',
+                'https://COMPANY.slack.com/archives/CCCCCCCCC/p9999999999999999',
+                '--users',
+                '--clicked', 'react-2'
                 # fmt: on
             ],
         )
         assert result.exit_code == 0
         assert result.output == 'UUUUUUUUUAA\nUUUUUUUUUBB\nUUUUUUUUUCC\n'
 
-    def test_list_react_user_without_react_name(self):
+    def test_query_users(self):
         runner = CliRunner()
-
         result = runner.invoke(
             slak.cli,
             [
                 # fmt: off
-                'list-react-users',
-                '--token', 'TOKEN',
-                '--channel', 'CHANNEL',
-                '--timestamp', 'TIMESTAMP',
-                # fmt: on
-            ],
-        )
-        assert result.exit_code == 0
-        assert result.output.count('\n') == 29
-
-    def test_query_emails(self):
-        runner = CliRunner()
-
-        result = runner.invoke(
-            slak.cli,
-            [
-                # fmt: off
-                'query-emails',
+                'query-users',
                 '--token', 'TOKEN',
                 # fmt: on
             ],
@@ -167,15 +144,15 @@ class TestReactCommands:
         assert result.exit_code == 0
         assert result.output == 'ACCOUNT@COMPANY.COM\nACCOUNT@COMPANY.COM\n'
 
-    def test_query_emails_by_args(self):
+    def test_query_users_by_args(self):
         runner = CliRunner()
-
         result = runner.invoke(
             slak.cli,
             [
                 # fmt: off
-                'query-emails', 'UUUUUUUUUU1', 'UUUUUUUUUU2',
+                'query-users',
                 '--token', 'TOKEN',
+                'UUUUUUUUUU1', 'UUUUUUUUUU2',
                 # fmt: on
             ],
         )
@@ -184,14 +161,13 @@ class TestReactCommands:
 
     def test_query_emails_with_names_titles(self):
         runner = CliRunner()
-
         result = runner.invoke(
             slak.cli,
             [
                 # fmt: off
-                'query-emails',
+                'query-users',
                 '--token', 'TOKEN',
-                '--names-titles',
+                '--names', '--titles',
                 # fmt: on
             ],
             input='UUUUUUUUUU1\nUUUUUUUUUU2',

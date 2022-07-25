@@ -118,6 +118,33 @@ def develop():
                 click.echo(u)
 
 
+@cli.command(help="Don't you have a token?")
+def how_to_get_a_token():
+    s = click.style
+    bw = lambda text: s(text, fg='bright_white')  # noqa
+
+    click.secho('How to get a token?', bold=True, underline=True)
+    click.echo(
+        f'''
+1. Open {bw('https://api.slack.com/apps')}.
+2. Click {bw('Create New App')}, {bw('From scratch')}, fill, and create the app.
+3. Switch to {bw('OAuth & Permissions')}, find {bw('Scope')}, and add {bw('reactions:read')}, {bw('users:read')}, {bw('users:read.email')}.
+4. Click {bw('Install to Workspace')}.
+5. Copy your token!
+
+Or ask your colleague for a token.'''  # noqa
+    )
+    click.echo('')
+    click.secho('How to set the token?', bold=True, underline=True)
+    click.echo(
+        f'''
+{s('$ read SLAK_TOKEN && export SLAK_TOKEN', bold=True)}
+
+In this way, you're free from using {bw('--token')} every time and your token is secure from being recorded into the command history file.
+'''  # noqa
+    )
+
+
 def add_token_option(f):
     return click.option(
         '--token',
@@ -145,33 +172,6 @@ def add_json_option(f, jsonl=False):
 
 def add_jsonl_option(f):
     return add_json_option(f, jsonl=True)
-
-
-@cli.command(help="Don't you have a token?")
-def how_to_get_a_token():
-    s = click.style
-    bw = lambda text: s(text, fg='bright_white')  # noqa
-
-    click.secho('How to get a token?', bold=True, underline=True)
-    click.echo(
-        f'''
-1. Open {bw('https://api.slack.com/apps')}.
-2. Click {bw('Create New App')}, {bw('From scratch')}, fill, and create the app.
-3. Switch to {bw('OAuth & Permissions')}, find {bw('Scope')}, and add {bw('reactions:read')}, {bw('users:read')}, {bw('users:read.email')}.
-4. Click {bw('Install to Workspace')}.
-5. Copy your token!
-
-Or ask your colleague for a token.'''  # noqa
-    )
-    click.echo('')
-    click.secho('How to set the token?', bold=True, underline=True)
-    click.echo(
-        f'''
-{s('$ read SLAK_TOKEN && export SLAK_TOKEN', bold=True)}
-
-In this way, you're free from using {bw('--token')} every time and your token is secure from being recorded into the command history file.
-'''  # noqa
-    )
 
 
 # We use `react` and `reaction` interchangeably.

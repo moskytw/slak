@@ -35,8 +35,8 @@ PyPI is too old school to cool kit. 😎
 
 ## PR Is Welcome
 
-The command is a single Python script shipped with a full test set, but only
-covered my use cases. It should be super easy to extend. PR is welcome!
+The command is a single Python script shipped with full tests, so it should be
+super easy to extend. PR is welcome!
 
 ## More Examples
 

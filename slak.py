@@ -7,8 +7,8 @@ import sys
 import json as _json
 from urllib.parse import urljoin
 
-import click
 import requests
+import click
 
 
 __version__ = '1.0.0'
@@ -16,47 +16,6 @@ __version__ = '1.0.0'
 
 def _json_dumps(x, indent=2):
     return _json.dumps(x, ensure_ascii=False, indent=indent)
-
-
-@click.group(help=__doc__)
-@click.version_option(version=__version__)
-def cli():
-    pass
-
-
-@cli.command(hidden=True, help='Some random code snippets for developing.')
-def develop():
-    click.secho('DEVELOP', bg='red', fg='white')
-    click.echo()
-
-    click.echo(f"{os.environ['USER']=}")
-    click.echo(f"{os.environ.get('TMP')=}")
-    click.echo(f"{os.environ.get('SLACK_LAB_TOKEN')=}")
-    click.echo()
-
-    # fmt: off
-    resp_json_dict = {'channel': 'CCCCCCCCC', 'message': {'blocks': [], 'client_msg_id': 'ffffffff-ffff-ffff-ffff-ffffffffffff', 'edited': {'ts': '9999999999.999999', 'user': 'U0475S3UU'}, 'is_locked': False, 'latest_reply': '9999999999.999999', 'permalink': 'https://COMPANY.slack.com/archives/CCCCCCCCC/p9999999999999999?thread_ts=9999999999.999999&cid=CCCCCCCCC', 'reactions': [{'count': 29, 'name': 'myreact', 'users': ['U018V1SL001', 'U037H4ET002', 'U03468ND003', 'U01UGH95004', 'U0171HXD005', 'U03HZDM9006', 'U037J5YF007', 'U017JVB9008', 'U016CPBJ009', 'U02AHQJC010', 'U01JM2GH011', 'U01THP8B012', 'U03M6CDT013', 'U01856GE014', 'U018HQVR015', 'UH841R016', 'U02G1091017', 'U02MQ9018', 'U037MLF6019', 'U03FWMR5020', 'U23D30021', 'U7JPG7022', 'U19255023', 'UHEHSS024', 'U01ENGL7025', 'U01RZGXQ026', 'UGN9FR027', 'U03M991G028', 'U015DFTJ029']}], 'reply_count': 16, 'reply_users': ['U0475S3AA', 'U029K07BB', 'U08KHCYCC', 'UGUABENDD', 'U4QJVN1EE', 'U02JJ67HCFF', 'U0G1KCKGG'], 'reply_users_count': 7, 'subscribed': False, 'team': 'TTTTTTTTT', 'text': '', 'thread_ts': '9999999999.999999', 'ts': '9999999999.999999', 'type': 'message', 'user': 'U0475S3UU'}, 'ok': True, 'type': 'message'}  # noqa
-    # fmt: on
-
-    click.echo(resp_json_dict['message']['reactions'])
-    click.echo()
-
-    react_name = None  # -> 29 users
-    react_name = 'myreact'  # -> 29 users
-    react_name = 'myreact123'  # -> 0 users
-
-    for d in resp_json_dict['message']['reactions']:
-
-        current_react_name = d['name']
-        users = d['users']
-        count = d['count']
-        if react_name is None:
-            react_name = current_react_name
-
-        if react_name == current_react_name:
-            assert len(users) == count
-            for u in users:
-                click.echo(u)
 
 
 # The `set_`/`get_` usually cues a quick operation, so here we avoid to use
@@ -116,6 +75,47 @@ def call_users_info(token, user):
         token=token,
         params=dict(user=user),
     )
+
+
+@click.group(help=__doc__)
+@click.version_option(version=__version__)
+def cli():
+    pass
+
+
+@cli.command(hidden=True, help='Some random code snippets for developing.')
+def develop():
+    click.secho('DEVELOP', bg='red', fg='white')
+    click.echo()
+
+    click.echo(f"{os.environ['USER']=}")
+    click.echo(f"{os.environ.get('TMP')=}")
+    click.echo(f"{os.environ.get('SLACK_LAB_TOKEN')=}")
+    click.echo()
+
+    # fmt: off
+    resp_json_dict = {'channel': 'CCCCCCCCC', 'message': {'blocks': [], 'client_msg_id': 'ffffffff-ffff-ffff-ffff-ffffffffffff', 'edited': {'ts': '9999999999.999999', 'user': 'U0475S3UU'}, 'is_locked': False, 'latest_reply': '9999999999.999999', 'permalink': 'https://COMPANY.slack.com/archives/CCCCCCCCC/p9999999999999999?thread_ts=9999999999.999999&cid=CCCCCCCCC', 'reactions': [{'count': 29, 'name': 'myreact', 'users': ['U018V1SL001', 'U037H4ET002', 'U03468ND003', 'U01UGH95004', 'U0171HXD005', 'U03HZDM9006', 'U037J5YF007', 'U017JVB9008', 'U016CPBJ009', 'U02AHQJC010', 'U01JM2GH011', 'U01THP8B012', 'U03M6CDT013', 'U01856GE014', 'U018HQVR015', 'UH841R016', 'U02G1091017', 'U02MQ9018', 'U037MLF6019', 'U03FWMR5020', 'U23D30021', 'U7JPG7022', 'U19255023', 'UHEHSS024', 'U01ENGL7025', 'U01RZGXQ026', 'UGN9FR027', 'U03M991G028', 'U015DFTJ029']}], 'reply_count': 16, 'reply_users': ['U0475S3AA', 'U029K07BB', 'U08KHCYCC', 'UGUABENDD', 'U4QJVN1EE', 'U02JJ67HCFF', 'U0G1KCKGG'], 'reply_users_count': 7, 'subscribed': False, 'team': 'TTTTTTTTT', 'text': '', 'thread_ts': '9999999999.999999', 'ts': '9999999999.999999', 'type': 'message', 'user': 'U0475S3UU'}, 'ok': True, 'type': 'message'}  # noqa
+    # fmt: on
+
+    click.echo(resp_json_dict['message']['reactions'])
+    click.echo()
+
+    react_name = None  # -> 29 users
+    react_name = 'myreact'  # -> 29 users
+    react_name = 'myreact123'  # -> 0 users
+
+    for d in resp_json_dict['message']['reactions']:
+
+        current_react_name = d['name']
+        users = d['users']
+        count = d['count']
+        if react_name is None:
+            react_name = current_react_name
+
+        if react_name == current_react_name:
+            assert len(users) == count
+            for u in users:
+                click.echo(u)
 
 
 def add_token_option(f):

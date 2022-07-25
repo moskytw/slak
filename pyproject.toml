@@ -11,8 +11,8 @@ license = {file = "LICENSE"}
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
 dependencies = [
-  "click",
   "requests",
+  "click",
 ]
 
 [project.urls]

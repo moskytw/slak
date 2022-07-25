@@ -35,7 +35,7 @@ PyPI is too old school to cool kit. 😎
 
 ## PR Is Welcome
 
-The command is a single Python script shipped with a full test set. I only
+The command is a single Python script shipped with a full test set, but only
 covered my use cases. It should be super easy to extend. PR is welcome!
 
 ## More Examples
@@ -71,7 +71,7 @@ $ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123
 $ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123456 --users
 ...
 likeapro	UMOSKY
-likeapro	USLAK
+likeapro	URANDCAT
 ...
 zap	URANDCAT
 ```
@@ -79,7 +79,7 @@ zap	URANDCAT
 ```bash
 $ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123456 --users --clicked likeapro
 UMOSKY
-UPINKOI
+URANDCAT
 ...
 ```
 
@@ -93,7 +93,7 @@ randcat@idontlikespam.neither
 ```bash
 $ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123456 --users --clicked likeapro | slak query-users --names --titles
 mosky@idontlikespam.anyway	Mosky Liu	Slak Author
-randcat@idontlikespam.neither	Rand Cat	Flyer
+randcat@idontlikespam.neither	Rand Cat	A Flyer?
 ...
 ```
 

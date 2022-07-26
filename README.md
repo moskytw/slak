@@ -1,7 +1,7 @@
 # Slak
 
-Slak is a command line tool for collecting data from Slack. And make you look
-like a pro when using it. ⚡️
+Slak is a command line tool for collecting data from Slack. When you use it,
+you will look like a pro. ⚡️
 
 ```bash
 $ slak query-reacts LINK --count | sort -nr
@@ -23,7 +23,7 @@ How to get a token?
 ...
 ```
 
-Yes, it's a self-explanatory tool! ✨
+Yes, it teaches you how to be a pro. ✨
 
 ## Installation
 
@@ -48,6 +48,9 @@ you can always:
 $ pipenv sync
 ...
 All dependencies are now up-to-date!
+```
+
+```bash
 $ pytest -q
 ...........
 11 passed in 0.15s

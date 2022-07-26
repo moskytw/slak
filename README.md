@@ -4,14 +4,14 @@ Slak is a command line tool for collecting data from Slack. When you use it,
 you will look like a pro. ⚡️
 
 ```bash
-$ slak query-reacts LINK --count | sort -nr
+$ slak query-reacts $LINK --count | sort -nr
 100	likeapro
 50	slak
 25	zap
 ```
 
 ```bash
-$ slak query-reacts LINK --users --clicked likeapro | slak query-users
+$ slak query-reacts $LINK --users --clicked likeapro | slak query-users
 mosky@idontlikespam.anyway
 randcat@idontcarespam.anyway
 ...
@@ -67,28 +67,28 @@ How to get a token?
 ```
 
 ```bash
-$ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123456
+$ slak query-reacts https://likeapro.slack.com/archives/C12AB1234/p1234567711085949
 slak
 likeapro
 zap
 ```
 
 ```bash
-$ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123456 --count
+$ slak query-reacts $LINK --count
 50	slak
 100	likeapro
 25	zap
 ```
 
 ```bash
-$ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123456 --count | sort -nr
+$ slak query-reacts $LINK --count | sort -nr
 100	likeapro
 50	slak
 25	zap
 ```
 
 ```bash
-$ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123456 --users
+$ slak query-reacts $LINK --users
 ...
 likeapro	UMOSKY
 likeapro	URANDCAT
@@ -97,28 +97,28 @@ zap	URANDCAT
 ```
 
 ```bash
-$ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123456 --users --clicked likeapro
+$ slak query-reacts $LINK --users --clicked likeapro
 UMOSKY
 URANDCAT
 ...
 ```
 
 ```bash
-$ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123456 --users --clicked likeapro | slak query-users
+$ slak query-reacts $LINK --users --clicked likeapro | slak query-users
 mosky@idontlikespam.anyway
 randcat@idontcare.anyway
 ...
 ```
 
 ```bash
-$ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123456 --users --clicked likeapro | slak query-users --names --titles
+$ slak query-reacts $LINK --users --clicked likeapro | slak query-users --names --titles
 mosky@idontlikespam.anyway	Mosky Liu	Slak Author
 randcat@idontcarespam.anyway	Rand Cat	Lying There
 ...
 ```
 
 ```bash
-$ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123456 --users | cut -f2 | slak query-users
+$ slak query-reacts $LINK --users | cut -f2 | slak query-users
 mosky.liu@idontlikespam.anyway
 randcat@idontcarespam.anyway
 ...

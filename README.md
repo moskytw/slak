@@ -1,6 +1,6 @@
 # Slak
 
-Slak is a command line tool for collecting data from Slack. And make you act
+Slak is a command line tool for collecting data from Slack. And make you look
 like a pro when using it. ⚡️
 
 ```bash
@@ -13,7 +13,7 @@ $ slak query-reacts LINK --count | sort -nr
 ```bash
 $ slak query-reacts LINK --users --clicked likeapro | slak query-users
 mosky@idontlikespam.anyway
-randcat@idontlikespam.neither
+randcat@idontcarespam.anyway
 ...
 ```
 
@@ -23,7 +23,7 @@ How to get a token?
 ...
 ```
 
-🤘🏻
+Yes, it's a self-explanatory tool! ✨
 
 ## Installation
 
@@ -31,12 +31,29 @@ How to get a token?
 $ pip install git+https://github.com/moskytw/slak.git
 ```
 
-PyPI is too old school to cool kit. 😎
+Or a stable version:
+
+```bash
+$ pip install git+https://github.com/moskytw/slak.git@v1.0.0
+```
+
+PyPI is too old school to the cool kit. 😎
 
 ## PR Is Welcome
 
-The command is a single Python script shipped with full tests, so it should be
-super easy to extend. PR is welcome!
+The command is a single Python script shipped with full tests and Pipfile.lock,
+you can always:
+
+```bash
+$ pipenv sync
+...
+All dependencies are now up-to-date!
+$ pytest -q
+...........
+11 passed in 0.15s
+```
+
+So, it should be super easy to extend. PR is welcome!
 
 ## More Examples
 
@@ -86,21 +103,21 @@ URANDCAT
 ```bash
 $ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123456 --users --clicked likeapro | slak query-users
 mosky@idontlikespam.anyway
-randcat@idontlikespam.neither
+randcat@idontcare.anyway
 ...
 ```
 
 ```bash
 $ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123456 --users --clicked likeapro | slak query-users --names --titles
 mosky@idontlikespam.anyway	Mosky Liu	Slak Author
-randcat@idontlikespam.neither	Rand Cat	A Flyer
+randcat@idontcarespam.anyway	Rand Cat	Lying There
 ...
 ```
 
 ```bash
 $ slak query-reacts https://likeapro.slack.com/archives/C09GC1234/p1658718657123456 --users | cut -f2 | slak query-users
-mosky.liu@idontlikespam.com
-slak@maylikespam.com
+mosky.liu@idontlikespam.anyway
+randcat@idontcarespam.anyway
 ...
 ```
 

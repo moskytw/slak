@@ -2,6 +2,9 @@
 
 '''Collect data from Slack like a pro. ⚡️'''
 
+__version__ = '1.0.0'
+
+
 import os
 import sys
 import json as _json
@@ -9,9 +12,6 @@ from urllib.parse import urljoin
 
 import requests
 import click
-
-
-__version__ = '1.0.0'
 
 
 def _json_dumps(x, indent=2):

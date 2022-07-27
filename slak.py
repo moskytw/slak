@@ -122,15 +122,15 @@ def develop():
 @cli.command(help="Start with me if you have no idea about token.")
 def how_to_get_a_token():
     s = click.style
-    bw = lambda text: s(text, fg='bright_white')  # noqa
+    sbw = lambda text: s(text, fg='bright_white')  # noqa
 
     click.secho('How to get a token?', bold=True, underline=True)
     click.echo(
         f'''
-1. Open {bw('https://api.slack.com/apps')}.
-2. Click {bw('Create New App')}, {bw('From scratch')}, fill, and create the app.
-3. Switch to {bw('OAuth & Permissions')}, find {bw('Scope')}, and add {bw('reactions:read')}, {bw('users:read')}, {bw('users:read.email')}.
-4. Click {bw('Install to Workspace')}.
+1. Open {sbw('https://api.slack.com/apps')}.
+2. Click {sbw('Create New App')}, {sbw('From scratch')}, fill, and create the app.
+3. Switch to {sbw('OAuth & Permissions')}, find {sbw('Scope')}, and add {sbw('reactions:read')}, {sbw('users:read')}, {sbw('users:read.email')}.
+4. Click {sbw('Install to Workspace')}.
 5. Copy your token!
 
 Or ask your colleague for a token.'''  # noqa
@@ -141,7 +141,7 @@ Or ask your colleague for a token.'''  # noqa
         f'''
 {s('$ read SLAK_TOKEN && export SLAK_TOKEN', bold=True)}
 
-In this way, you're free from using {bw('--token')} every time and your token is secure from being recorded into the history file.
+In this way, you're free from using {sbw('--token')} every time and your token is secure from being recorded into the history file.
 '''  # noqa
     )
 

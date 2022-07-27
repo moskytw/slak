@@ -5,9 +5,8 @@
 __version__ = '1.0.0'
 
 
-import os
-import sys
 import json as _json
+import sys
 from urllib.parse import urljoin
 
 import requests

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 from unittest.mock import patch
 from click.testing import CliRunner
 import slak

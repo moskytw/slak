@@ -87,7 +87,7 @@ def develop():
     click.secho('DEVELOP', bg='red', fg='white')
     click.echo()
 
-    # # They required Python 3.8+.
+    # # They required Python 3.8+:
     # click.echo(f"{os.environ['USER']=}")
     # click.echo(f"{os.environ.get('TMP')=}")
     # click.echo(f"{os.environ.get('SLACK_LAB_TOKEN')=}")

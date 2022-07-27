@@ -23,9 +23,11 @@ How to get a token?
 ...
 ```
 
-Yes, it teaches you how to be a pro. ✨
+Yes, it also teaches you how to be a pro. ✨
 
 ## Installation
+
+PyPI is too old school to the cool kit:
 
 ```bash
 $ pip install git+https://github.com/moskytw/slak.git
@@ -37,21 +39,19 @@ Or a stable version:
 $ pip install git+https://github.com/moskytw/slak.git@v1.0.0
 ```
 
-PyPI is too old school to the cool kit. 😎
-
 ## PR Is Welcome
 
-The command is a single Python script shipped with full tests and Pipfile.lock,
-you can always:
+The command is a single Python script shipped with full tests and Pipfile.lock.
+You can always:
 
 ```bash
-$ pipenv sync
+$ pipenv sync --dev
 ...
 All dependencies are now up-to-date!
 ```
 
 ```bash
-$ pytest -q
+$ pipenv run pytest -q
 ...........
 11 passed in 0.15s
 ```

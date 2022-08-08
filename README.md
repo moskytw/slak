@@ -126,4 +126,10 @@ randcat@idontcarespam.anyway
 ...
 ```
 
+```bash
+$ slak query-users UMOSKY URANDCAT --jsonl | jq '[.user.profile.email, .user.profile.display_name] | @tsv' -r
+mosky@idontlikespam.anyway	Mosky
+randcat@idontcarespam.anyway	ICat
+```
+
 Enjoy! 🍻

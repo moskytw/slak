@@ -156,7 +156,7 @@ def add_token_option(f):
     )(f)
 
 
-def _add_option(f, decls, format_name):
+def _add_format_option(f, decls, format_name):
     return click.option(
         *decls,
         is_flag=True,
@@ -165,11 +165,11 @@ def _add_option(f, decls, format_name):
 
 
 def add_json_option(f):
-    return _add_option(f, ['--json', 'to_json'], 'JSON')
+    return _add_format_option(f, ['--json', 'to_json'], 'JSON')
 
 
 def add_jsonl_option(f):
-    return _add_option(f, ['--jsonl', 'to_jsonl'], 'JSONL')
+    return _add_format_option(f, ['--jsonl', 'to_jsonl'], 'JSONL')
 
 
 # We use `react` and `reaction` interchangeably.

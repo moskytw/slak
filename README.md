@@ -38,7 +38,7 @@ $ pip install git+https://github.com/moskytw/slak.git
 Or a stable version:
 
 ```bash
-$ pip install git+https://github.com/moskytw/slak.git@v1.0.0
+$ pip install git+https://github.com/moskytw/slak.git@v1.0.1
 ```
 
 ## PR Is Welcome

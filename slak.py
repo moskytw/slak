@@ -2,7 +2,7 @@
 
 '''Collect data from Slack like a pro. ⚡️'''
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 
 import json

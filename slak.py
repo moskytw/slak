@@ -5,7 +5,7 @@
 __version__ = '1.0.0'
 
 
-import json as _json
+import json
 import sys
 from urllib.parse import urljoin
 
@@ -14,7 +14,7 @@ import click
 
 
 def _json_dumps(x, indent=2):
-    return _json.dumps(x, ensure_ascii=False, indent=indent)
+    return json.dumps(x, ensure_ascii=False, indent=indent)
 
 
 # The `set_`/`get_` usually cues a quick operation, so here we avoid to use
@@ -156,23 +156,20 @@ def add_token_option(f):
     )(f)
 
 
-def add_json_option(f, jsonl=False):
-    decl = '--json'
-    format_name = 'JSON'
-
-    if jsonl:
-        decl = '--jsonl'
-        format_name = 'JSON Lines'
-
+def _add_option(f, decls, format_name):
     return click.option(
-        decl,
+        *decls,
         is_flag=True,
         help=f'Print the response body in {format_name} directly.',  # noqa
     )(f)
 
 
+def add_json_option(f):
+    return _add_option(f, ['--json', 'to_json'], 'JSON')
+
+
 def add_jsonl_option(f):
-    return add_json_option(f, jsonl=True)
+    return _add_option(f, ['--jsonl', 'to_jsonl'], 'JSONL')
 
 
 # We use `react` and `reaction` interchangeably.
@@ -208,11 +205,10 @@ def query_reacts(
     to_count_reacts=None,
     to_list_users=None,
     specified_name=None,
-    # TODO: to_json
-    json=None,
+    to_json=None,
 ):
     resp_json_dict = call_reaction_gets_by_link(token, link)
-    if json:
+    if to_json:
         click.echo(_json_dumps(resp_json_dict))
         return
 
@@ -262,14 +258,14 @@ $ echo U123AB45C | slack query-emails --token TOKEN
 )
 @add_jsonl_option
 def query_users(
-    token, users, with_email=None, with_name=None, with_title=None, jsonl=None
+    token, users, with_email=None, with_name=None, with_title=None, to_jsonl=None
 ):
     if not users:
         users = sys.stdin.read().split()
 
     for user in users:
         resp_json_dict = call_users_info(token, user)
-        if jsonl:
+        if to_jsonl:
             # So, we get the output in JSON Lines.
             click.echo(_json_dumps(resp_json_dict, indent=None))
             continue

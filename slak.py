@@ -258,7 +258,12 @@ $ echo U123AB45C | slack query-emails --token TOKEN
 )
 @add_jsonl_option
 def query_users(
-    token, users, with_email=None, with_name=None, with_title=None, to_jsonl=None
+    token,
+    users,
+    with_email=None,
+    with_name=None,
+    with_title=None,
+    to_jsonl=None,
 ):
     if not users:
         users = sys.stdin.read().split()

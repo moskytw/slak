@@ -120,7 +120,7 @@ randcat@idontcarespam.anyway	Rand Cat	Lying There
 ```
 
 ```bash
-$ slak query-reacts $LINK --users | cut -f2 | slak query-users
+$ slak query-reacts $LINK --users | cut -f2 | sort -u | slak query-users
 mosky.liu@idontlikespam.anyway
 randcat@idontcarespam.anyway
 ...

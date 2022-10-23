@@ -11,9 +11,9 @@ slak = {editable = true, path = "."}
 [dev-packages]
 pytest = "~=7.1"
 pytest-cov = "~=3.0"
-flake8 = "~=5.0.4"
-black = "~=22.10.0"
-ipdb = "~=0.13.9"
+flake8 = "~=5.0"
+black = "~=22.10"
+ipdb = "~=0.13"
 mypy = "~=0.982"
 flit = "~=3.7"
 

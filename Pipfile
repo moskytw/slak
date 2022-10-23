@@ -9,6 +9,7 @@ click = "~=8.1"
 slak = {editable = true, path = "."}
 
 [dev-packages]
+ipdb = "~=0.13.9"
 pytest = "~=7.1"
 pytest-cov = "~=3.0"
 flit = "~=3.7"

@@ -10,8 +10,8 @@ slak = {editable = true, path = "."}
 
 [dev-packages]
 pytest = "~=7.1"
-flit = "~=3.7"
 pytest-cov = "~=3.0"
+flit = "~=3.7"
 
 [requires]
 python_version = "3.10"
